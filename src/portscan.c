@@ -28,4 +28,24 @@ static int parse_port(const char *text, int *port) {
 
     *port = (int)value;
     return 1;
+
+    static int port_is_open(const struct in_addr *address, int port) {
+        int fd = socket(AF_INET, SOCK_STREAM, 0);
+
+        if (fd == -1) {
+            perror("socket");
+            return 0;
+        }
+
+        struct timeval timeout = {
+            .tv_sec = CONNECT_TIMEOUT_SECONDS,
+            .tv_usec = 0;
+        };
+
+        if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == -1) {
+            perror("setsockopt");
+            close(fd);
+            return 0;
+        }
+    }
 }
