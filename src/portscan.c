@@ -48,4 +48,22 @@ static int port_is_open(const struct in_addr *address, int port) {
         close(fd);
         return 0;
     }
+
+    struct sockaddr_in target;
+    memset(&target, 0, sizeof(target));
+    target.sin_family = AF_INET;
+    target.sin_port = htons((unsigned short) port);
+    target.sin_addr = *address;
+
+    int result = connect(fd, (struct sockaddr *) &target, sizeof(target));
+    int saved_errno = errno;
+    close(fd);
+
+    if (result == 0) {
+        return 1;
+    }
+
+    errno = saved_errno;
+    return 0;
+    
 }
