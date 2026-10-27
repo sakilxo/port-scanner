@@ -13,7 +13,7 @@
 
 
 static void usage(const char *program) {
-    fprint(stderr, "usage: %s <IPv4 address> <start-port> <end-port> \n", program);
+    fprintf(stderr, "usage: %s <IPv4 address> <start-port> <end-port> \n", program);
     fprintf(stderr, "example: %s 127.0.0.1 1 1000 \n", program);
 }
 
@@ -104,5 +104,5 @@ int main(int argc, char *argv[]) {
 
     printf("\n scan complete, found %d open port(s) \n", open_count);
     return EXIT_SUCCESS;
-    
+
 }
