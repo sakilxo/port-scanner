@@ -67,3 +67,42 @@ static int port_is_open(const struct in_addr *address, int port) {
     return 0;
     
 }
+
+
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        usage(argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    struct in_addr address;
+    if (inet_pton(AF_INET, argv[1], &address) != 1) {
+        fprintf(stderr, "error: enter a valid IPv4 address \n");
+        return EXIT_FAILURE;
+    }
+
+    int start_port, end_port;
+    if (!parse_port(argv[2], &start_port) || !parse_port(argv[3], &end_port)) {
+        fprintf(stderr, "error: ports must be int ranging 1 to 65535 \n");
+        return EXIT_FAILURE;
+    }
+
+    if (start_port > end_port) {
+        fprintf(stderr, "error: start port must be less than or equal to send port \n");
+        return EXIT_FAILURE;
+    }
+
+    printf("scanning %s, ports %d - %d \n \n ", argv[1], start_port, end_port);
+
+    int open_count = 0;
+    for (int port = start_port; port <= end_port; port++) {
+        if (port_is_open(&address, port)) {
+            printf("port %-5d OPEN \n ", port);
+            open_count++;
+        }
+    }
+
+    printf("\n scan complete, found %d open port(s) \n", open_count);
+    return EXIT_SUCCESS;
+    
+}
